@@ -22,6 +22,11 @@ def fetch_instagram_data(instagram_url):
             print("Page loaded successfully.")
             page.wait_for_selector("video", timeout=30000)  # Wait for the video element
 
+            # Log the page content for debugging
+            page_content = page.content()
+            print(f"Raw page content: {page_content[:500]}...")  # Log the first 500 characters of the page content
+            print(f"Raw page response: {page_content}")  # Log the raw response from the page
+
             # Fetch the video URL
             video_url = page.query_selector("video").get_attribute("src")
 
@@ -34,7 +39,6 @@ def fetch_instagram_data(instagram_url):
                 print("Error: Video or Thumbnail URL not found.")
                 raise Exception("Failed to fetch video or thumbnail URL.")
             
-            print(f"Fetched Video URL: {video_url}")  # Log the video URL
             print(f"Fetched Video URL: {video_url}")  # Log the video URL
             print(f"Fetched Thumbnail URL: {thumbnail_url}")
 
