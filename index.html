@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Video Downloader</title>
+    <style>
+        #loading-animation {
+            display: none;
+        }
+        #result {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Instagram Video Downloader</h1>
+    <input type="text" id="url" placeholder="Enter Instagram Video URL">
+    <button onclick="fetchVideoData()">Download Video</button>
+    <div id="loading-animation">
+        <p>Loading...</p>
+    </div>
+    <div id="result">
+        <img id="thumbnail" alt="Thumbnail" style="width: 200px; height: 200px;">
+        <br>
+        <a id="download-button" href="" download>Download Video</a>
+    </div>
+
+    <script>
+        function fetchVideoData() {
+            var url = document.getElementById('url').value;
+            if (!url) {
+                alert("Please enter a URL!");
+                return;
+            }
+
+            document.getElementById('loading-animation').style.display = 'block';
+            document.getElementById('result').style.display = 'none';
+
+            fetch(`/download?url=${encodeURIComponent(url)}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('loading-animation').style.display = 'none';
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        document.getElementById('thumbnail').src = data.thumbnail_url;
+                        document.getElementById('download-button').href = data.video_url;  // Store video URL
+                        document.getElementById('result').style.display = 'block';
+                    }
+                })
+                .catch(err => {
+                    console.error('Error fetching video data:', err);
+                    alert('Error fetching video data: ' + err);
+                    document.getElementById('loading-animation').style.display = 'none';
+                });
+        }
+    </script>
+</body>
+</html>
